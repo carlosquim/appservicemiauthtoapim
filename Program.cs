@@ -25,7 +25,7 @@ DateTime T = System.DateTime.UtcNow;
 try
 {
  token = credential.GetToken(new Azure.Core.TokenRequestContext(["api://644e0700-85ae-4de0-83dd-a876d692e693/.default"]));
-     stringData=stringData + "Token:" +token;
+     stringData=stringData + "Token:" +token.Token.ToString();
 }
 catch (System.Exception e)
 {
