@@ -11,11 +11,8 @@ var stringData="";
 // Init default credential
 var credential = new Azure.Identity.DefaultAzureCredential();
 //Address for APIM
-String envApimGatewayEp = Environment.GetEnvironmentVariable("envApimGatewayEp");
-var baseAddress =envApimGatewayEp;
-
-String envApi = Environment.GetEnvironmentVariable("envApi");
-var api = envApi;
+var baseAddress = "https://apimcqm002.azure-api.net/";
+var api = "process004/api/Todo";
 var contentType = new MediaTypeWithQualityHeaderValue("application/json");
 //init token
 var token = new AccessToken();
@@ -24,11 +21,10 @@ HttpClient client = new HttpClient();
 client.BaseAddress = new Uri(baseAddress);
 client.DefaultRequestHeaders.Accept.Add(contentType);
 //set initial time to measure delay using jwt autentication
-DateTime T = System.DateTime.UtcNow;
+DateTime T = System.DateTime.UtcNow; 
 try
 {
-String envAppRegistrationId = Environment.GetEnvironmentVariable("envAppRegistrationId");
- token = credential.GetToken(new Azure.Core.TokenRequestContext([envAppRegistrationId]));
+ token = credential.GetToken(new Azure.Core.TokenRequestContext(["api://644e0700-85ae-4de0-83dd-a876d692e693/.default"]));
  Console.WriteLine(token.Token);
 }
 catch (System.Exception e)
@@ -69,40 +65,6 @@ Record itemAll = new(
 
 );
 string base64GuidCall = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
-Record itemRequest= new(
-    appservicename:"clientwithauth",
-    app:"authentication",
-    id: base64GuidCall,
-    category: "call",
-    name: "Time for API Call in MS",
-    responseTime: TT2.TotalMilliseconds,
-    date: System.DateTime.UtcNow
-);
-string envCosmosPk= Environment.GetEnvironmentVariable("envCosmospk");
-string envCosmosEp= Environment.GetEnvironmentVariable("envCosmosep");
-string EndpointUri= envCosmosEp;
-string PrimaryKey = envCosmosPk;
-
-CosmosClient cosmosClient = new CosmosClient(EndpointUri, PrimaryKey, new CosmosClientOptions() { ApplicationName = "CosmosDBDotnetQuickstart" });
-Database database = cosmosClient.GetDatabase("metrics");
-Container container = database.GetContainer("metrics");
-
-
-
-
-ItemResponse<Record> firstResponse = await container.CreateItemAsync<Record>(itemAll);
-
-// Note that after creating the item, we can access the body of the item with the Resource property off the ItemResponse. We can also access the RequestCharge property to see the amount of RUs consumed on this request.
- Console.WriteLine("Created item in database with id: {0} Operation consumed {1} RUs.\n", firstResponse.Resource.id, firstResponse.RequestCharge);
-
-
-
-ItemResponse<Record> callResponse = await container.CreateItemAsync<Record>(itemRequest);
-
-// Note that after creating the item, we can access the body of the item with the Resource property off the ItemResponse. We can also access the RequestCharge property to see the amount of RUs consumed on this request.
- Console.WriteLine("Created item in database with id: {0} Operation consumed {1} RUs.\n", callResponse.Resource.id, callResponse.RequestCharge);
-               
-
 }
 catch (System.Exception e)
 {
