@@ -53,17 +53,7 @@ try
         stringData=stringData+ "Error with code: "+response.StatusCode.ToString();
         }
 string base64GuidAll = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
-Record itemAll = new(
-    appservicename:"clientwithauth",
-    app:"authentication",
-    id: base64GuidAll,
-    category: "auth+call",
-    name: "Time for authentication and API call in MS",
-    responseTime: TT.TotalMilliseconds,
-    date: System.DateTime.UtcNow
 
-
-);
 string base64GuidCall = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
 }
 catch (System.Exception e)
