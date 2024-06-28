@@ -11,14 +11,14 @@ var stringData="";
 // Init default credential
 var credential = new Azure.Identity.DefaultAzureCredential();
 //Address for APIM
-var baseAddress = "https://apimcqm002.azure-api.net/";
-var api = "process004/api/Todo";
+var baseAddress = "https://testtokencqm002.azurewebsites.net/";
+var api = "api/Todo";
 var contentType = new MediaTypeWithQualityHeaderValue("application/json");
 //init token
 var token = new AccessToken();
 //init http client
 HttpClient client = new HttpClient(); 
-client.BaseAddress = new Uri(baseAddress);
+//client.BaseAddress = new Uri(baseAddress);
 client.DefaultRequestHeaders.Accept.Add(contentType);
 //set initial time to measure delay using jwt autentication
 DateTime T = System.DateTime.UtcNow; 
@@ -42,8 +42,8 @@ DateTime T2 = System.DateTime.UtcNow;
 try
 {
     var response = await client.GetAsync(baseAddress + api);
-    TimeSpan TT = System.DateTime.UtcNow - T;
-    TimeSpan TT2 = System.DateTime.UtcNow - T2;
+   // TimeSpan TT = System.DateTime.UtcNow - T;
+   // TimeSpan TT2 = System.DateTime.UtcNow - T2;
     if (response.IsSuccessStatusCode)
         {
         stringData = stringData+ "Response from APIM:"+ await response.Content.ReadAsStringAsync();
