@@ -24,8 +24,8 @@ client.DefaultRequestHeaders.Accept.Add(contentType);
 DateTime T = System.DateTime.UtcNow; 
 try
 {
- token = credential.GetToken(new Azure.Core.TokenRequestContext(["api://644e0700-85ae-4de0-83dd-a876d692e693/.default"]));
-     stringData=stringData + "Token:" +token.Token.ToString();
+ token = credential.GetToken(new Azure.Core.TokenRequestContext(["api://644e0700-85ae-4de0-83dd-a876d692e693/.default"],));
+     stringData=stringData + "Token:" +token.Token.ToString()+"<br>";
 }
 catch (System.Exception e)
 {
