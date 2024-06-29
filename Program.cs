@@ -27,7 +27,7 @@ try
     string[] scopes = new string[] { "User.Read", "User.ReadBasic.All"};
     TokenRequestContext tr=new Azure.Core.TokenRequestContext(["api://644e0700-85ae-4de0-83dd-a876d692e693/.default"],null, "roles");
  token = credential.GetToken(tr);
-     stringData=stringData + "Token:" +token.Token.ToString()+"<br>";
+     stringData=stringData + "roles:"+tr.Claims+ "\r\nToken:" +token.Token.ToString()+"\r\n";
 }
 catch (System.Exception e)
 {
