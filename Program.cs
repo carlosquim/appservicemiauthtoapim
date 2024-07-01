@@ -28,31 +28,12 @@ client.DefaultRequestHeaders.Accept.Add(contentType);
 DateTime T = System.DateTime.UtcNow; 
 
 
-HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com/");
-request.Headers["Metadata"] = "true";
-request.Method = "GET";
-stringData = stringData+ "\r\nHttpWebRequest:"+request;
-try
-{
-    var credential2 = new ManagedIdentityCredential();
 
-    // Call /token endpoint
-    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-    // Pipe response Stream to a StreamReader, and extract access token
-    StreamReader streamResponse = new StreamReader(response.GetResponseStream()); 
-    string stringResponse = streamResponse.ReadToEnd();
-   stringData=stringData+ "\r\nstringresponse:"+stringResponse;
-}
-catch (System.Exception e)
-{
-    stringData=stringData+"Error getting token: "+e.Message;
-}
 try
 {
     string[] scopes = new string[] { "User.Read", "User.ReadBasic.All"};
     
- token = credential.GetToken(new Azure.Core.TokenRequestContext(scopes:["api://644e0700-85ae-4de0-83dd-a876d692e693/.default"],claims: "role"));
+ token = credential.GetToken(new Azure.Core.TokenRequestContext(scopes:["api://644e0700-85ae-4de0-83dd-a876d692e693/.default"],claims: "roles"));
      stringData=stringData + "roles:"+ "\r\nToken:" +token.Token.ToString()+"\r\n";
 }
 catch (System.Exception e)
