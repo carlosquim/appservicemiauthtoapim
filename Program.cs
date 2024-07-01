@@ -4,6 +4,10 @@ using System.Net.Http.Json;
 using Azure.Core;
 using Azure.Identity;
 using Microsoft.Azure.Cosmos;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
 
 
 // message to be shown in the page
@@ -22,16 +26,38 @@ HttpClient client = new HttpClient();
 client.DefaultRequestHeaders.Accept.Add(contentType);
 //set initial time to measure delay using jwt autentication
 DateTime T = System.DateTime.UtcNow; 
+
+
+HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com/");
+request.Headers["Metadata"] = "true";
+request.Method = "GET";
+stringData = stringData+ "\r\nHttpWebRequest:"+request;
+try
+{
+    var credential2 = new ManagedIdentityCredential();
+
+    // Call /token endpoint
+    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+    // Pipe response Stream to a StreamReader, and extract access token
+    StreamReader streamResponse = new StreamReader(response.GetResponseStream()); 
+    string stringResponse = streamResponse.ReadToEnd();
+   stringData=stringData+ "\r\nstringresponse:"+stringResponse;
+}
+catch (System.Exception e)
+{
+    stringData=stringData+"Error getting token: "+e.Message;
+}
 try
 {
     string[] scopes = new string[] { "User.Read", "User.ReadBasic.All"};
     
- token = credential.GetToken(new Azure.Core.TokenRequestContext(["api://644e0700-85ae-4de0-83dd-a876d692e693/.default"],null, "role"));
+ token = credential.GetToken(new Azure.Core.TokenRequestContext(scopes:["api://644e0700-85ae-4de0-83dd-a876d692e693/.default"],claims: "role"));
      stringData=stringData + "roles:"+ "\r\nToken:" +token.Token.ToString()+"\r\n";
 }
 catch (System.Exception e)
 {
-    stringData="Error getting token: "+e.Message;
+    stringData=stringData+"Error getting token: "+e.Message;
 }
 
 //set token
